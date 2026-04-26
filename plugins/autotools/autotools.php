@@ -18,7 +18,8 @@ class rAutoTools
 	public $watch_start = 0;
 	public $automove_filter = "/.*/";
 	public $addName = 0;
-	public $addLabel = 0;	
+	public $addLabel = 0;
+	public $addTracker = 0;
 
 	static public function load()
 	{
@@ -33,7 +34,9 @@ class rAutoTools
 		if( !property_exists( $at, "addName" ) )
 			$at->addName = 0;
 		if( !property_exists( $at, "addLabel" ) )
-			$at->addLabel = 0;			
+			$at->addLabel = 0;
+		if( !property_exists( $at, "addTracker" ) )
+			$at->addTracker = 0;
 		return $at;
 	}
 	public function store()
@@ -60,6 +63,7 @@ class rAutoTools
 			$this->automove_filter = "/.*/";
 			$this->addName = 0;
 			$this->addLabel = 0;
+			$this->addTracker = 0;
 			foreach( $vars as $var )
 			{
 				$parts = explode( "=", $var );
@@ -118,7 +122,11 @@ class rAutoTools
 				else if( $parts[0] == "add_name" )
 				{
 					$this->addName = $parts[1];
-				}				
+				}
+				else if( $parts[0] == "add_tracker" )
+				{
+					$this->addTracker = $parts[1];
+				}
 			}
 			$this->setHandlers();
 		}
@@ -139,6 +147,7 @@ class rAutoTools
 		$ret .= ", WatchStart: ".$this->watch_start;
 		$ret .= ", AddLabel: ".$this->addLabel;
 		$ret .= ", AddName: ".$this->addName;
+		$ret .= ", AddTracker: ".$this->addTracker;
 		return $ret." };\n";
 	}
 	public function setHandlers()
@@ -173,10 +182,10 @@ class rAutoTools
 			{
 				if($this->fileop_type=="Move")
 				{
-					$cmd = 	$theSettings->getOnFinishedCommand(array('automove'.User::getUser(), 
+					$cmd = 	$theSettings->getOnFinishedCommand(array('automove'.User::getUser(),
 							getCmd('d.set_directory_base').'="$'.getCmd('execute_capture').
 							'={'.Utility::getPHP().','.$pathToAutoTools.'/check.php,$'.getCmd('d.get_base_path').'=,$'.
-							getCmd('d.get_base_filename').'=,$'.getCmd('d.is_multi_file').'=,$'.getCmd('d.get_custom1').'=,$'.getCmd('d.get_name').'=,'.User::getUser().'}" ; '.
+							getCmd('d.get_base_filename').'=,$'.getCmd('d.is_multi_file').'=,$'.getCmd('d.get_custom1').'=,$'.getCmd('d.get_name').'=,'.User::getUser().',$'.getCmd('d.get_hash').'=}" ; '.
 							getCmd('execute').'={'.Utility::getPHP().','.$pathToAutoTools.'/move.php,$'.getCmd('d.get_hash').'=,$'.getCmd('d.get_base_path').'=,$'.
 							getCmd('d.get_base_filename').'=,$'.getCmd('d.is_multi_file').'=,$'.getCmd('d.get_custom1').'=,$'.getCmd('d.get_name').'=,'.User::getUser().'}'
 						));

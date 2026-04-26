@@ -18,6 +18,31 @@ function rtDbg( $prefix, $str )
 
 
 //------------------------------------------------------------------------------
+// Extract the registrable domain from a tracker announce URL.
+// Returns empty string for IP-address trackers or unparseable URLs.
+//------------------------------------------------------------------------------
+function rtGetTrackerDomain( $announce )
+{
+	$domain = parse_url( $announce, PHP_URL_HOST );
+	if( $domain && preg_match( "/^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$/", $domain ) != 1 )
+	{
+		$parts = explode( '.', $domain );
+		$cnt = count( $parts );
+		if( $cnt > 2 )
+		{
+			if( in_array( $parts[$cnt-2], array( "co", "com", "net", "org" ) ) ||
+				in_array( $parts[$cnt-1], array( "uk" ) ) )
+				$parts = array_slice( $parts, $cnt-3 );
+			else
+				$parts = array_slice( $parts, $cnt-2 );
+			$domain = implode( '.', $parts );
+		}
+	}
+	return (string) $domain;
+}
+
+
+//------------------------------------------------------------------------------
 // Check if script was launched in background (with --daemon switch)
 //------------------------------------------------------------------------------
 function rtIsDaemon( $args )
