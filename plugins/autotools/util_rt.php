@@ -18,12 +18,28 @@ function rtDbg( $prefix, $str )
 
 
 //------------------------------------------------------------------------------
-// Extract the registrable domain from a tracker announce URL.
-// Returns empty string for IP-address trackers or unparseable URLs.
-//------------------------------------------------------------------------------
-function rtGetTrackerDomain( $announce )
+function rtGetTrackerDomain( $source )
 {
-	$domain = parse_url( $announce, PHP_URL_HOST );
+	if( is_string($source) && strpos($source, '://') === false )
+	{
+		$session = rTorrentSettings::get()->session;
+		if( empty($session) ) return "";
+		$fname = rtAddTailSlash($session).$source.".torrent";
+		if( !is_readable($fname) ) return "";
+		$source = new Torrent($fname);
+		if( $source->errors() ) return "";
+	}
+	if( is_object($source) )
+	{
+		$url = $source->announce();
+		if( empty($url) )
+		{
+			$list = $source->announce_list();
+			if( !empty($list) ) $url = $list[0][0];
+		}
+		$source = $url;
+	}
+	$domain = parse_url( $source, PHP_URL_HOST );
 	if( $domain && preg_match( "/^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$/", $domain ) != 1 )
 	{
 		$parts = explode( '.', $domain );

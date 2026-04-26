@@ -132,14 +132,7 @@ if( $at->enable_move && (@preg_match($at->automove_filter.'u',$label)==1) )
 		        			$dest_path.=FileUtil::addslash($label);
 					if($at->addTracker)
 					{
-						$tracker_url = $torrent->announce();
-						if( empty($tracker_url) )
-						{
-							$announce_list = $torrent->announce_list();
-							if( !empty($announce_list) )
-								$tracker_url = $announce_list[0][0];
-						}
-						$tracker_dir = rtGetTrackerDomain($tracker_url);
+						$tracker_dir = rtGetTrackerDomain( $torrent );
 						if( !empty($tracker_dir) )
 							$dest_path .= FileUtil::addslash( $tracker_dir );
 						Debug( "tracker dir     : ".(empty($tracker_dir) ? "not found in .torrent" : $tracker_dir) );
