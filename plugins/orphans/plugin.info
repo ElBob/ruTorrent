@@ -1,0 +1,6 @@
+plugin.description: Lists filesystem files not tracked by any rtorrent torrent (orphans).
+plugin.author: ElBob
+plugin.version: 1.0
+rtorrent.remote: error
+php.extensions.error: json
+plugin.help: https://github.com/Novik/ruTorrent/wiki/PluginOrphans
