@@ -105,40 +105,16 @@ if( $is_ok && strpos( $label, "{DIR}" ) !== false )
 // Get info about tracker
 if( $is_ok && strpos( $label, "{TRACKER}" ) !== false )
 {
-	$req = new rXMLRPCRequest( array(
-		new rXMLRPCCommand( "t.multicall",
-			array( $hash, "", getCmd("t.is_enabled="), getCmd("t.get_type="), getCmd("t.get_group="), getCmd("t.get_url=") )
-		)
-	));
-	$req->setParseByTypes();
-	if( $req->run() && !$req->fault )
+	$lbl_tracker = rtGetTrackerDomain( $hash );
+	if( $lbl_tracker == "" )
 	{
-		for( $i = 0; $i < count( $req->strings ); $i++ )
-		{
-			// enabled, type == 1, group == 0
-			if( $req->i8s[$i*3] == 0 || $req->i8s[$i*3+1] != 1 || $req->i8s[$i*3+2] != 0 )
-				continue;
-			$lbl_tracker = parse_url( $req->strings[$i], PHP_URL_HOST );
-			// if tracker is not an IP address, then
-			if( preg_match( "/^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$/", $lbl_tracker ) != 1 )
-			{
-				// get 2-nd level domain only
-				$pos = strpos( $lbl_tracker, '.' );
-				if( $pos !== false )
-				{
-					$tmp = substr( $lbl_tracker, $pos + 1 );
-					if( strpos( $tmp, '.' ) !== false )
-						$lbl_tracker = $tmp;
-				}
-			}
-			Debug( "tracker         : ".$lbl_tracker );
-			$label = str_replace( "{TRACKER}", $lbl_tracker, $label );
-			break; // we need the first tracker only
-		}
-	}
-	else {
-		Debug( "rXMLRPCRequest() fail (t.multicall)" );
+		Debug( "tracker not found in .torrent" );
 		$is_ok = false;
+	}
+	else
+	{
+		Debug( "tracker         : ".$lbl_tracker );
+		$label = str_replace( "{TRACKER}", $lbl_tracker, $label );
 	}
 }
 

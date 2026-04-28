@@ -8,12 +8,27 @@ if( count( $argv ) > 6 )
 
 require_once( "./util_rt.php" );
 require_once( "./autotools.php" );
+eval( FileUtil::getPluginConf( 'autotools' ) );
+
+//------------------------------------------------------------------------------
+function Debug( $str )
+{
+	global $autodebug_enabled;
+	if( $autodebug_enabled ) rtDbg( "AutoCheck", $str );
+}
 
 $base_path = $argv[1];
 $base_name = $argv[2];
-$is_multy = $argv[3];
-$label	   = UTF::raw_url_decode($argv[4]);
-$name = $argv[5];
+$is_multy  = $argv[3];
+$label     = UTF::raw_url_decode($argv[4]);
+$name      = $argv[5];
+$hash      = isset($argv[7]) ? $argv[7] : '';
+
+Debug( "" );
+Debug( "--- begin ---" );
+Debug( "hash            : ".$hash );
+Debug( "base_path       : ".$base_path );
+Debug( "label           : ".$label );
 
 $base_path = rtRemoveTailSlash( $base_path );
 $base_path = rtRemoveLastToken( $base_path, '/' );	// filename or dirname
@@ -43,6 +58,13 @@ if( $at->enable_move && (@preg_match($at->automove_filter.'u',$label)==1) )
 				$dest_path = rtAddTailSlash( $path_to_finished.$rel_path );
 				if($at->addLabel && ($label!=''))
 	        			$dest_path.=FileUtil::addslash($label);
+				if($at->addTracker && !empty($hash))
+				{
+					$tracker_dir = rtGetTrackerDomain( $hash );
+					if(!empty($tracker_dir))
+						$dest_path .= FileUtil::addslash($tracker_dir);
+					Debug( "tracker dir     : ".(empty($tracker_dir) ? "not found in .torrent" : $tracker_dir) );
+				}
 		        	if($at->addName && ($name!=''))
 					$dest_path.=FileUtil::addslash($name);
 			}
@@ -55,4 +77,6 @@ if( $is_multy )
 else
 	$sub_dir = '';					// $base_file - is really a file
 $dest_path.=$sub_dir;
+Debug( "dest_path       : ".$dest_path );
+Debug( "--- end ---" );
 echo $dest_path;

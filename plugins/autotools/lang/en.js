@@ -23,6 +23,7 @@
  theUILang.autotoolsFileOpSoftLink	= "Soft link";
  theUILang.autotoolsAddLabel		= "Add torrent's label to path";
  theUILang.autotoolsAddName		= "Add torrent's name to path";
+ theUILang.autotoolsAddTracker		= "Add torrent's tracker to path";
  theUILang.autotoolsEnableMove		= "Enable \"AutoMove\" if torrent's label matches filter";
  theUILang.autotoolsSkipMoveForFiles	= "Skip torrents that contain files matching pattern";
 

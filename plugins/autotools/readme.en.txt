@@ -32,7 +32,7 @@ Template variables:
   and the new torrent is set to download to /usr/p2p/downloads/Video/DVD/ then 
   the variable would be "Video/DVD"
 
-{TRACKER)
+{TRACKER}
   The variable would be set to tracker name.
 
 {NOW}
@@ -75,8 +75,27 @@ file named /usr/p2p/downloads/Video/DVD/movie.avi  it will overwrite the old one
 The best solution for this is to create a subdirectory that is different from the first, 
 in this very unlikely situation.
 
-For your convenience, it is recommended that you install the plugin "_getdir"  
+For your convenience, it is recommended that you install the plugin "_getdir"
 This will make navigating the filesystem from the webgui much easier.
+
+Path options:
+
+Three checkboxes in the AutoMove settings control optional subdirectories
+appended to the destination path before files are placed:
+
+  "Add torrent's label to path"   — appends the torrent's label.
+  "Add torrent's tracker to path" — appends the tracker's domain name
+                                    (e.g. "https://tracker.example.com/announce"
+                                    becomes "example.com").
+  "Add torrent's name to path"    — appends the torrent's name.
+
+These are applied in that order (label → tracker → name). For example,
+with all three enabled and a base destination of /media/p2p/, a torrent
+with label "Movies", tracked at https://tracker.example.com/announce,
+named "MyMovie", downloading to /usr/p2p/downloads/Video/DVD/, would be
+moved to:
+
+    /media/p2p/Video/DVD/Movies/example.com/MyMovie/
 
 After file transfer the plugin searches for file ".mailto" in directories, 
 from "/media/p2p/Video/Movie/ downto "/media/p2p/. If this file is found, 
@@ -117,6 +136,10 @@ With this, you can create a system of watch directories to drop .torrent files i
 ----------------------------------------------------------------------------------------------
 Version History:
 ----------------------------------------------------------------------------------------------
+
+    2026-04-25:
+    - AutoMove: added "Add tracker to path" option — appends the torrent's
+      tracker domain as a subdirectory of the destination path
 
     2012-02-15:
     - "CC:" and "BCC:" options for .mailto

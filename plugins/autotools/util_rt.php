@@ -18,6 +18,47 @@ function rtDbg( $prefix, $str )
 
 
 //------------------------------------------------------------------------------
+function rtGetTrackerDomain( $source )
+{
+	if( is_string($source) && strpos($source, '://') === false )
+	{
+		$session = rTorrentSettings::get()->session;
+		if( empty($session) ) return "";
+		$fname = rtAddTailSlash($session).$source.".torrent";
+		if( !is_readable($fname) ) return "";
+		$source = new Torrent($fname);
+		if( $source->errors() ) return "";
+	}
+	if( is_object($source) )
+	{
+		$url = $source->announce();
+		if( empty($url) )
+		{
+			$list = $source->announce_list();
+			if( !empty($list) ) $url = $list[0][0];
+		}
+		$source = $url;
+	}
+	$domain = parse_url( $source, PHP_URL_HOST );
+	if( $domain && preg_match( "/^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$/", $domain ) != 1 )
+	{
+		$parts = explode( '.', $domain );
+		$cnt = count( $parts );
+		if( $cnt > 2 )
+		{
+			if( in_array( $parts[$cnt-2], array( "co", "com", "net", "org" ) ) ||
+				in_array( $parts[$cnt-1], array( "uk" ) ) )
+				$parts = array_slice( $parts, $cnt-3 );
+			else
+				$parts = array_slice( $parts, $cnt-2 );
+			$domain = implode( '.', $parts );
+		}
+	}
+	return (string) $domain;
+}
+
+
+//------------------------------------------------------------------------------
 // Check if script was launched in background (with --daemon switch)
 //------------------------------------------------------------------------------
 function rtIsDaemon( $args )
