@@ -10,7 +10,7 @@ if (plugin.canChangeOptions()) {
 			$$('enable_move').checked  = (theWebUI.autotools.EnableMove === 1);
 			$$('path_to_finished').value = theWebUI.autotools.PathToFinished;
 			$$('skip_move_for_files').value = theWebUI.autotools.SkipMoveForFiles;
-			linked($$('enable_move'), 0, ['automove_filter', 'path_to_finished', 'skip_move_for_files', 'path_to_finished_btn', 'fileop_type', 'auto_add_label', 'auto_add_name']);
+			linked($$('enable_move'), 0, ['automove_filter', 'path_to_finished', 'skip_move_for_files', 'path_to_finished_btn', 'fileop_type', 'auto_add_label', 'auto_add_name', 'auto_add_tracker']);
 			$$('fileop_type').value = theWebUI.autotools.FileOpType;
 			$$('enable_watch').checked  = (theWebUI.autotools.EnableWatch === 1);
 			$$('path_to_watch').value = theWebUI.autotools.PathToWatch;
@@ -22,7 +22,8 @@ if (plugin.canChangeOptions()) {
 				plugin.DirBrowser2.hide();
 			$$('automove_filter').value = theWebUI.autotools.MoveFilter;
 			$$('auto_add_label').checked = (theWebUI.autotools.AddLabel === 1);
-			$$('auto_add_name').checked = (theWebUI.autotools.AddName === 1);			
+			$$('auto_add_name').checked = (theWebUI.autotools.AddName === 1);
+			$$('auto_add_tracker').checked = (theWebUI.autotools.AddTracker === 1);
 		}
 		plugin.addAndShowSettings.call(theWebUI, arg);
 	}
@@ -52,6 +53,8 @@ if (plugin.canChangeOptions()) {
 			return true;
 		if ($$('auto_add_name').checked !== (theWebUI.autotools.AddName === 1))
 			return true;
+		if ($$('auto_add_tracker').checked !== (theWebUI.autotools.AddTracker === 1))
+			return true;
 		return false;
 	}
 
@@ -72,6 +75,7 @@ if (plugin.canChangeOptions()) {
 			"&enable_watch=" + ( $$('enable_watch').checked  ? '1' : '0' ) +
 			"&add_label=" + ( $$('auto_add_label').checked  ? '1' : '0' ) +
 			"&add_name=" + ( $$('auto_add_name').checked  ? '1' : '0' ) +
+			"&add_tracker=" + ( $$('auto_add_tracker').checked  ? '1' : '0' ) +
 			"&path_to_watch=" + $$('path_to_watch').value +
 			"&automove_filter=" + $$('automove_filter').value +			
 			"&watch_start=" + ( $$('watch_start').checked  ? '1' : '0' );
@@ -99,7 +103,7 @@ plugin.onLangLoaded = function() {
 				),
 				$("<div>").addClass("row").append(
 					$("<div>").addClass("col-1 justify-content-md-end").append(
-						$("<input>").attr({type:"checkbox", id:"enable_move", onchange:"linked(this, 0, ['automove_filter', 'skip_move_for_files', 'path_to_finished', 'path_to_finished_btn', 'fileop_type', 'auto_add_label', 'auto_add_name']);"}),
+						$("<input>").attr({type:"checkbox", id:"enable_move", onchange:"linked(this, 0, ['automove_filter', 'skip_move_for_files', 'path_to_finished', 'path_to_finished_btn', 'fileop_type', 'auto_add_label', 'auto_add_name', 'auto_add_tracker']);"}),
 					),
 					$("<div>").addClass("col-11").append(
 						$("<label>").attr({for:"enable_move"}).text(theUILang.autotoolsEnableMove),
@@ -139,6 +143,10 @@ plugin.onLangLoaded = function() {
 					$("<div>").addClass("col-11 offset-1 col-md-6 offset-md-0 checkbox").append(
 						$("<input>").attr({type:"checkbox", id:"auto_add_name"}),
 						$("<label>").attr({id:"lbl_auto_add_name", for:"auto_add_name"}).text(theUILang.autotoolsAddName),
+					),
+					$("<div>").addClass("col-11 offset-1 col-md-5 checkbox").append(
+						$("<input>").attr({type:"checkbox", id:"auto_add_tracker"}),
+						$("<label>").attr({id:"lbl_auto_add_tracker", for:"auto_add_tracker"}).text(theUILang.autotoolsAddTracker),
 					),
 				),
 				$("<div>").addClass("row").append(

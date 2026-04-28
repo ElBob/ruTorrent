@@ -130,8 +130,15 @@ if( $at->enable_move && (@preg_match($at->automove_filter.'u',$label)==1) )
 					// last condition avoids appending duplicate path from combining folder and label (eg autowatch and autolabel)
 					if($at->addLabel && ($label!='') && ($label!=trim($rel_path,'/')))
 		        			$dest_path.=FileUtil::addslash($label);
+					if($at->addTracker)
+					{
+						$tracker_dir = rtGetTrackerDomain( $torrent );
+						if( !empty($tracker_dir) )
+							$dest_path .= FileUtil::addslash( $tracker_dir );
+						Debug( "tracker dir     : ".(empty($tracker_dir) ? "not found in .torrent" : $tracker_dir) );
+					}
 			        	if($at->addName && ($name!=''))
-						$dest_path.=FileUtil::addslash($name);					
+						$dest_path.=FileUtil::addslash($name);
 					if(operationOnTorrentFiles($torrent,$base_path,$base_name,$is_multi,$dest_path,$fileop_type))
 					{
 //						if($fileop_type=="Move")

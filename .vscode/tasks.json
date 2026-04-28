@@ -1,0 +1,38 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Deploy autotools to ruTorrent",
+      "type": "shell",
+      "command": "rsync -avz ./plugins/autotools/ robert@bitmaison.local:/volume3/docker/rtorrent-rutorrent/data/rutorrent/plugins/autotools/ && ssh robert@bitmaison.local '/usr/local/bin/docker cp /volume3/docker/rtorrent-rutorrent/data/rutorrent/plugins/autotools/. rtorrent-rutorrent-rtorrent-rutorrent-1:/var/www/rutorrent/plugins/autotools'",
+      "group": "build",
+      "presentation": { "reveal": "always", "panel": "shared" }
+    },
+    {
+      "label": "Deploy sort to ruTorrent",
+      "type": "shell",
+      "command": "rsync -avz ./plugins/sort/ robert@bitmaison.local:/volume3/docker/rtorrent-rutorrent/data/rutorrent/plugins/sort/ && ssh robert@bitmaison.local '/usr/local/bin/docker cp /volume3/docker/rtorrent-rutorrent/data/rutorrent/plugins/sort/. rtorrent-rutorrent-rtorrent-rutorrent-1:/var/www/rutorrent/plugins/sort'",
+      "group": "build",
+      "presentation": { "reveal": "always", "panel": "shared" }
+    },
+    {
+      "label": "Deploy orphans to ruTorrent",
+      "type": "shell",
+      "command": "rsync -avz ./plugins/orphans/ robert@bitmaison.local:/volume3/docker/rtorrent-rutorrent/data/rutorrent/plugins/orphans/ && ssh robert@bitmaison.local '/usr/local/bin/docker cp /volume3/docker/rtorrent-rutorrent/data/rutorrent/plugins/orphans/. rtorrent-rutorrent-rtorrent-rutorrent-1:/var/www/rutorrent/plugins/orphans'",
+      "group": "build",
+      "presentation": { "reveal": "always", "panel": "shared" }
+    },
+    {
+      "label": "Deploy all plugins to ruTorrent",
+      "dependsOn": [
+        "Deploy autotools to ruTorrent",
+        // "Deploy sort to ruTorrent",
+        "Deploy orphans to ruTorrent"
+      ],
+      "dependsOrder": "parallel",
+      "group": { "kind": "build", "isDefault": true },
+      "presentation": { "reveal": "always", "panel": "shared" }
+    }
+  ]
+}
+l
