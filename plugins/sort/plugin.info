@@ -1,0 +1,6 @@
+plugin.description: Manually trigger autotools move rules for selected torrent(s).
+plugin.author: ElBob
+plugin.version: 1.0
+plugin.runlevel: 11
+plugin.dependencies: autotools
+rtorrent.external.error: php
