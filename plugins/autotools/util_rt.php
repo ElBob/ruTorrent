@@ -40,6 +40,8 @@ function rtGetTrackerDomain( $source )
 		$source = $url;
 	}
 	$domain = parse_url( $source, PHP_URL_HOST );
+	if( is_string($source) && !empty($source) && strpos($source, '://') === false )
+	$source = 'x://'.$source;
 	if( $domain && preg_match( "/^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$/", $domain ) != 1 )
 	{
 		$parts = explode( '.', $domain );
